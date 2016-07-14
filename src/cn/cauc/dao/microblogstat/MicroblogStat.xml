@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cauc.dao.microblogstat.IMicroblogStatMapper" >
+	<select id="findMicroblogStats" resultType="MicroblogStat" parameterType="TzParams">
+		SELECT 
+			id,
+			real_name as realName,
+			create_time as createTime,
+			update_time as updateTime,
+			is_delete as isDelete,
+			male,
+			card_id as cardId,
+			email,
+			telephone,
+			company,
+			forbiden
+		FROM 
+			cauc_microblogstat
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(realName)">
+				and real_name LIKE '%${realName}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(isDelete)">
+				and  is_delete = #{isDelete}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(male)">
+				and male = #{male} 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(cardId)">
+				and card_id LIKE '%${cardId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(email)">
+				and email LIKE '%${email}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(telephone)">
+				and telephone LIKE '%${telephone}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(company)">
+				and company LIKE '%${company}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and create_time &gt;= '${startDate}' and create_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(create_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(create_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(create_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(create_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(create_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(create_time)=QUARTER(now())
+			</if>
+		</trim>	
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	<select id="count" resultType="int" parameterType="TzParams">
+		SELECT
+			count(1) 
+		FROM
+			cauc_microblogstat
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(realName)">
+				and real_name LIKE '%${realName}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(isDelete)">
+				and  is_delete = #{isDelete}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(male)">
+				and male = #{male} 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(cardId)">
+				and card_id LIKE '%${cardId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(email)">
+				and email LIKE '%${email}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(telephone)">
+				and telephone LIKE '%${telephone}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(company)">
+				and company LIKE '%${company}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and create_time &gt;= '${startDate}' and create_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(create_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(create_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(create_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(create_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(create_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(create_time)=QUARTER(now())
+			</if>
+		</trim>	
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	
+	<select id="get" resultType="MicroblogStat">
+		SELECT
+			id,
+			real_name as realName,
+			create_time as createTime,
+			update_time as updateTime,
+			is_delete as isDelete,
+			male,
+			card_id as cardId,
+			email,
+			telephone,
+			company,
+			forbiden
+		FROM
+			cauc_microblogstat
+		where id = #{id}
+	</select>
+	
+	<update id="update" parameterType="MicroblogStat">
+		update cauc_microblogstat 
+		<set>
+			<if test="updateTime!=null">update_time=#{updateTime}</if>
+			<if test="isDelete!=null">is_delete=#{isDelete}</if>			
+			<if test="forbiden!=null">forbiden=#{forbiden}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="TzParams">
+<!-- 	delete from cauc_microblogstat  where id = #{id} -->
+		update cauc_microblogstat set is_delete = 1 where id = #{id}
+	</delete>
+	
+	<insert id="save" parameterType="MicroblogStat" useGeneratedKeys="true" keyProperty="id" flushCache="true" >
+	  	INSERT INTO cauc_microblogstat
+		  	(real_name,
+			password,
+			update_time,
+			is_delete,
+			male,
+			card_id,
+			email,
+			telephone,
+			company,
+			forbiden) 
+		  	VALUES 
+	  	(#{realName},#{password},#{updateTime},#{isDelete},#{male},#{cardId},#{email},#{telephone},#{company},#{forbiden})
+	</insert>
+	
+	<select id="groupSex" resultType="java.util.HashMap" parameterType="TzParams">
+		SELECT 
+			sex,
+			COUNT(1) as num
+		FROM 
+			t_user_info
+		WHERE 
+			DATE_FORMAT(register_time,'%Y')= #{year}
+		GROUP BY sex
+		ORDER BY sex		
+	</select>	
+	
+	<select id="groupAge" resultType="java.util.HashMap" parameterType="TzParams">		
+		SELECT 
+			c.name,
+			c.num 
+		FROM (
+			SELECT '10后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s >= 2010
+			UNION ALL
+			SELECT '00后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s BETWEEN 2000 AND 2009
+			UNION ALL
+			SELECT '90后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s BETWEEN 1990 AND 1999
+			UNION ALL
+			SELECT '80后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s BETWEEN 1980 AND 1989
+			UNION ALL
+			SELECT '70后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s BETWEEN 1970 AND 1979
+			UNION ALL
+			SELECT '60后' as name,COUNT(1) as num FROM (SELECT CONVERT(SUBSTR(birthday,1,4),SIGNED) as s FROM t_user_info WHERE birthday like '%年%月%日') u WHERE s BETWEEN 1960 AND 1969
+			)AS c 
+		ORDER BY c.num DESC		
+	</select>
+	
+	<select id="groupLocation" resultType="java.util.HashMap" parameterType="TzParams">		
+		SELECT 
+			b.province as name,
+			a.value
+		FROM
+			b_provinces b  
+		LEFT JOIN 
+			(SELECT 
+				SUBSTR(location,1,3) as loca,
+				COUNT(1) as value
+			FROM
+				t_user_info 
+			GROUP BY loca) as a 
+		ON b.province = a.loca
+		ORDER BY a.value DESC	
+	</select>
+	
+	<select id="findDegreeScore" resultType="String" parameterType="TzParams">
+		select 
+			degree
+		FROM
+			t_user_info
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and user_id = ${userId}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and user_alias LIKE '%${userAlias}%' 
+			</if>
+		</trim>			
+	</select>	
+		
+	<select id="findNodes" resultType="java.util.HashMap">
+		SELECT 
+			a.user_id as userId,
+			i.user_alias as userAlias,
+			a.atuser as atuser,
+			a.atuser_id as atuserId,
+			count(1) as num
+		FROM t_user_weibocontent_atuser a
+		LEFT JOIN t_user_info i ON a.user_id=i.user_id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and a.user_id = ${userId} 
+			</if>
+		</trim>
+		GROUP BY a.atuser_id;			
+	</select>
+	
+	<select id="countNodeValue" resultType="String">
+		SELECT 
+			count(1)
+		FROM t_user_weibocontent_atuser a
+		LEFT JOIN t_user_info i ON a.user_id=i.user_id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and a.user_id = ${userId} 
+			</if>
+		</trim>
+		GROUP BY a.user_id;			
+	</select>
+	
+	<select id="findLinks" resultType="java.util.HashMap" parameterType="TzParams">
+		SELECT 
+			a.user_id as userId,
+			i.user_alias as userAlias,
+			a.atuser,
+			a.atuser_id as atuserId
+		FROM t_user_weibocontent_atuser a
+		LEFT JOIN t_user_info i ON a.user_id=i.user_id			
+		ORDER BY a.user_id ASC;	
+	</select>
+	
+	<select id="findNodesLinks" resultType="java.util.HashMap">
+		SELECT 
+			COUNT(1)
+		FROM t_user_weibocontent_atuser a
+		LEFT JOIN t_user_info i ON a.user_id=i.user_id
+		WHERE a.user_id = ${userId} and a.atuser_id = ${atuserId}	
+		GROUP BY a.user_id		
+		ORDER BY a.user_id ASC;	
+	</select>
+	
+	<select id="countLinkWeight" resultType="String">
+		SELECT 
+			count(1)
+		FROM t_user_weibocontent_atuser a
+		LEFT JOIN t_user_info i ON a.user_id=i.user_id
+		WHERE a.user_id = ${userId} and a.atuser_id = ${atuserId}	
+		GROUP BY a.user_id		
+		ORDER BY a.user_id ASC;	
+	</select>
+	
+	<select id="groupContents" resultType="java.util.HashMap" parameterType="TzParams">
+		SELECT 
+			w.id,
+			w.user_id as userId,
+			w.content,
+			w.publish_time as publishTime,
+			w.repost_user as repostUser,
+			w.repost_user_id as repostUserId,
+			w.publish_timestamp publishTimestamp,
+			i.user_alias as userAlias
+		FROM t_user_weibocontent w 
+		LEFT JOIN t_user_info i 
+		ON w.user_id = i.user_id
+		WHERE DATE_FORMAT(w.publish_time,'%m') = #{month}
+		ORDER BY ${order}
+		limit #{pageNo},#{pageSize}
+	</select>
+	
+	<select id="groupContent" resultType="java.util.HashMap" parameterType="TzParams">
+		
+		SELECT 
+			DATE_FORMAT(publish_time,'%m') as m,
+			count(1) as num
+		FROM 
+			t_user_weibocontent
+		WHERE 
+			DATE_FORMAT(publish_time,'%Y')= #{year}
+		GROUP BY m
+		ORDER BY m ASC		
+	</select>
+</mapper>

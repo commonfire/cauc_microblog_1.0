@@ -1,0 +1,66 @@
+
+body{ background:#EFF3F5; color: #6D6D66;}
+.wth1200{ width:1200px; margin:0 auto;}
+.font18{ font-size: 18px;}
+.magl10{ margin-left:10px;}
+.bg_white{ background: #fff;}
+.overflow{overflow:hidden;text-overflow:ellipsis; white-space: nowrap;}
+
+
+.head{ height:70px; line-height:68px; background:#28384F;}
+.haed_text,.login_btn{ display:inline-block; width:90px; height:64px; text-align:center; color:#ccc; border:1px solid rgba(0,0,0,0); border-bottom:5px solid rgba(0,0,0,0);}
+.haed_text:hover{ border-bottom:5px solid #C33; color:#fff;}
+
+.cont_left{ width: 940px;}
+.cont_right{ width: 220px;}
+
+.pingl_box,.cont_head,.cont_details,.comment_cont{ padding: 20px;}
+.cont_head,.cont_details{ background: #fff; border-bottom: 1px solid #ddd;}
+.conte_title{ height: 40px; font-weight: 600; line-height: 40px; font-size: 20px;}
+.Classification span{ margin-right: 20px; color: #666B84;}
+.Classification span.tage{padding: 0px 5px;height: 20px;font-size: 12px;color: #9AABBF;line-height: 20px;background-color: #DFE5E9;border-radius: 2px;}
+.Classification span a{ color: #3498DB;}
+.Classification span a:hover,.single_name a:hover{ text-decoration:underline;}
+.Classification span.Operation i{ margin-left: 5px; color: #D23E3E;}
+.comment_box{padding: 20px 10px;}
+.share_box ul li{ float: left;margin: 9px 7px;}
+.share_box ul li a{background:url("../images/share.png") no-repeat;display: block; width: 25px; height: 25px;}
+.share_box ul li:nth-child(1) a{ background-position: 0 0;}
+.share_box ul li:nth-child(2) a{ background-position: -40px 0;}
+.share_box ul li:nth-child(3) a{ background-position: -80px 0;}
+.share_box ul li:nth-child(4) a{ background-position: -120px 0;}
+.praise{ margin-left: 250px;}
+.praise a{ display: block; background: #3498DB; width: 150px; height: 60px;border-radius: 30px; color: #fff; font-size: 22px; line-height: 60px; text-align: center;}
+.collect_box a{ margin-top: 10px; display: block;width: 120px;height: 38px;font-size: 14px;color: #2C3E50;line-height: 38px;text-align: center;border-radius: 20px;border: 1px solid #4F5F6E;transition: all 0.2s ease-in-out 0s;}
+.collect_box a:hover{color: #3498DB;border-color: #3498DB;}
+.login_hint{width: 100%;height: 86px;padding: 22px 30px;background-color: #FFF7E7;border: 1px solid #DED6C5;box-sizing: border-box;}
+.login_hint p{float: left;font-size: 14px;color: #6B3612;line-height: 40px;}
+.login_hint a{display: inline-block; float: right; width: 100px; padding: 10px 0;line-height: 20px;border-radius: 2px; letter-spacing: 1px;text-align: center;white-space: nowrap;vertical-align: middle;}
+.primary_btn{color: #FFF;background-color: #3498DB;}
+.nature_btn{color: #2C3E50;background-color: transparent;}
+.single_comment{ margin-bottom: 10px; padding: 10px;}
+.single_comment:hover{ background: #EAEAEA;}
+.single_img{ display: block; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin-right: 20px;}
+.single_cont{ width: 750px;}
+.single_name a{color: #95A5A6;font-weight: bold;}
+.single_name i{ font-size: 12px; margin-left: 20px;}
+.yijian{ color: #34495E; font-size: 16px; line-height: 1.3em;}
+.huifu a{ display: inline-block; margin-top: 5px; width: 60px; color:#6D6D66; font-size: 12px; height: 30px; line-height: 30px; }
+.huifu a:hover{ color: #3498DB;}
+.personal{ background: #fff; padding-top: 20px; text-align: center; border:1px solid #ddd; position: relative;}
+.user_img{ display: inline-block; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin-bottom: 10px;}
+.add_tb{ font-size: 24px; display: inline-block; background: #3498DB; color: #fff; width: 30px; height: 30px; border-radius: 50%; line-height: 25px; text-align: center; position: absolute; bottom: 40px; left: 95px;}
+.attention_box a{  border-top:1px solid #ddd;margin-top: 20px;background: #F8F8F8;}
+.attention_box a,.praise_box a{  display: block; float: left; width: 50%; height: 50px; padding-top: 5px; text-align: center; }
+.praise_box a{ background: #fff;}
+.attention_box a i,.praise_box a i{ color: #ACBBC6;}
+.attention_box a b,.praise_box a b{ color: #34495E; font-weight: 700;}
+.attention_box a:hover,.praise_box a:hover{ background: #EAEAEA;}
+.praise_box{ border:1px solid #ddd;margin-top: 20px;}
+
+
+
+
+
+
+

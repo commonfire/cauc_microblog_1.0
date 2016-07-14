@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cauc.dao.user.IUserMapper" >
+	<select id="findUsers" resultType="User" parameterType="TzParams">
+		SELECT 
+			id,
+			real_name as realName,
+			create_time as createTime,
+			update_time as updateTime,
+			is_delete as isDelete,
+			male,
+			card_id as cardId,
+			email,
+			telephone,
+			company,
+			forbiden
+		FROM 
+			cauc_user
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(realName)">
+				and real_name LIKE '%${realName}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(isDelete)">
+				and  is_delete = #{isDelete}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(male)">
+				and male = #{male} 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(cardId)">
+				and card_id LIKE '%${cardId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(email)">
+				and email LIKE '%${email}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(telephone)">
+				and telephone LIKE '%${telephone}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(company)">
+				and company LIKE '%${company}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and create_time &gt;= '${startDate}' and create_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(create_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(create_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(create_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(create_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(create_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(create_time)=QUARTER(now())
+			</if>
+		</trim>	
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	<select id="count" resultType="int" parameterType="TzParams">
+		SELECT
+			count(1) 
+		FROM
+			cauc_user 
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(realName)">
+				and real_name LIKE '%${realName}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(isDelete)">
+				and  is_delete = #{isDelete}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(male)">
+				and male = #{male} 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(cardId)">
+				and card_id LIKE '%${cardId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(email)">
+				and email LIKE '%${email}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(telephone)">
+				and telephone LIKE '%${telephone}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(company)">
+				and company LIKE '%${company}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and create_time &gt;= '${startDate}' and create_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(create_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(create_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(create_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(create_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(create_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(create_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(create_time)=QUARTER(now())
+			</if>
+		</trim>	
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	
+	<select id="get" resultType="User">
+		SELECT
+			id,
+			real_name as realName,
+			create_time as createTime,
+			update_time as updateTime,
+			is_delete as isDelete,
+			male,
+			card_id as cardId,
+			email,
+			telephone,
+			company,
+			forbiden
+		FROM
+			cauc_user 
+		where id = #{id}
+	</select>
+	
+	<update id="update" parameterType="User">
+		update cauc_user 
+		<set>
+			<if test="updateTime!=null">update_time=#{updateTime}</if>
+			<if test="isDelete!=null">is_delete=#{isDelete}</if>			
+			<if test="forbiden!=null">forbiden=#{forbiden}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="updatePW" parameterType="User">
+		update cauc_user 
+		<set>
+			update_time=#{updateTime},	
+			password=#{password}
+		</set>
+		where id = #{id}
+	</update>
+		
+	<delete id="delete" parameterType="TzParams">
+<!-- 	delete from cauc_user  where id = #{id} -->
+		update cauc_user set is_delete = 1 where id = #{id}
+	</delete>
+	
+	<insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id" flushCache="true" >
+	  	INSERT INTO cauc_user
+		  	(real_name,
+			password,
+			update_time,
+			is_delete,
+			male,
+			card_id,
+			email,
+			telephone,
+			company,
+			forbiden) 
+		  	VALUES 
+	  	(#{realName},#{password},#{updateTime},#{isDelete},#{male},#{cardId},#{email},#{telephone},#{company},#{forbiden})
+	</insert>
+	
+	<select id="getLogin" resultType="User" parameterType="TzParams">
+		SELECT
+			id,
+			real_name as realName,
+			password,
+			email,
+			forbiden
+		FROM
+			cauc_user
+		WHERE email =#{account} AND password =#{password} AND is_delete = 0 		
+	</select>
+	
+</mapper>

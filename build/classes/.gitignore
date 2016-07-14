@@ -1,0 +1,9 @@
+/cn/
+/db/
+/ehcache/
+/ehcache.xml
+/log4j.properties
+/mybatis-config.xml
+/spring/
+/validatemessages_en_US.properties
+/validatemessages_zh_CN.properties

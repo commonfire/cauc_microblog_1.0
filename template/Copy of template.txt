@@ -1,0 +1,28 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/pages/common/taglib.jsp"%>
+<c:forEach var="[smallBeanName]" varStatus="[smallBeanName]index" items="${datas}">
+	<tr>
+		<td>
+			${[smallBeanName].id}
+			<c:if test="${[smallBeanName]index.index==0}"><input type="hidden" id="itemCount" value="${itemCount}"/></c:if>
+		</td>	
+		<td>${[smallBeanName].name}</td>	
+		<td>${[smallBeanName].userId}</td>	
+		<td class="tmui-tips" tip="${tz:formatDate([smallBeanName].createTime,'yyyy-MM-dd HH:mm:ss')}">
+			${tz:timeFormat([smallBeanName].createTime)}
+		</td>	
+		<td>
+			<tz:if test="${[smallBeanName].isDelete==0}">
+				<tz:then><a href="javascript:void(0)" opid="${[smallBeanName].id}" mark="isDelete" val="1" onclick="tzAdmin.op(this);" class="red">否</a></tz:then>
+				<tz:else><a href="javascript:void(0)" opid="${[smallBeanName].id}" mark="isDelete" val="0" onclick="tzAdmin.op(this);" class="green">是</a></tz:else>
+			</tz:if>	
+		</td>	
+		<td>
+			<tz:if test="${[smallBeanName].status==0}">
+				<tz:then><a href="javascript:void(0)" opid="${[smallBeanName].id}" mark="status" val="1" onclick="tzAdmin.op(this);" class="red">否</a></tz:then>
+				<tz:else><a href="javascript:void(0)" opid="${[smallBeanName].id}" mark="status" val="0" onclick="tzAdmin.op(this);" class="green">是</a></tz:else>
+			</tz:if>	
+		</td>	
+		<td><a href="javascript:void(0);">未删除</a></td>
+	</tr>
+</c:forEach>

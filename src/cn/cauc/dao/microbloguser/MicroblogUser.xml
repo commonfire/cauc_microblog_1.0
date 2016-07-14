@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cauc.dao.microbloguser.IMicroblogUserMapper" >
+	<select id="findMicroblogUsers" resultType="MicroblogUser" parameterType="TzParams">
+		select 
+			id,
+			user_id as userId,
+			user_alias as userAlias,
+			location,
+			sex,
+			blog,
+			domain,
+			brief,
+			birthday,
+			register_time as registerTime,
+			image,
+			degree,
+			thumbnail,
+			property
+		FROM
+			t_user_info
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and user_id = ${userId}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and user_alias LIKE '%${userAlias}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(sf)">
+				and location LIKE '%${sf}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(sex)">
+				and sex LIKE '%${sex}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(blog)">
+				and blog LIKE '%${blog}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(domain)">
+				and domain LIKE '%${domain}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(brief)">
+				and brief LIKE '%${brief}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and register_time &gt;= '${startDate}' and register_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(property)">
+				and property LIKE '%${property}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(register_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(register_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(register_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(register_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(register_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(register_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(register_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(register_time)=QUARTER(now())
+			</if>
+		</trim>
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	
+	<select id="count" resultType="int" parameterType="TzParams">
+		SELECT
+			count(1) 
+		FROM
+			t_user_info
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and user_id = ${userId}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and user_alias LIKE '%${userAlias}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(sf)">
+				and location LIKE '%${sf}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(sex)">
+				and sex LIKE '%${sex}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(blog)">
+				and blog LIKE '%${blog}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(domain)">
+				and domain LIKE '%${domain}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate) and @cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and register_time &gt;= '${startDate}' and register_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(property)">
+				and property LIKE '%${property}%' 
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(register_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(register_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(register_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(register_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(register_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(register_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(register_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(register_time)=QUARTER(now())
+			</if>		
+		</trim>
+	</select>
+	
+	<select id="findDegreeScore" resultType="String" parameterType="TzParams">
+		select 
+			degree
+		FROM
+			t_user_info
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and user_id = ${userId}
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and user_alias LIKE '%${userAlias}%' 
+			</if>
+		</trim>			
+	</select>
+</mapper>

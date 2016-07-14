@@ -1,0 +1,108 @@
+/**
+ * 民航安保信息管理分析预警平台
+ * cauc_microblog
+ * [daoPackage].[smallBeanName]
+ * I[beanName]Mapper.java
+ * 创建人:[author]
+ * 时间：[date]
+ * 中国民航大学-版权所有
+ */
+package [daoPackage].[smallBeanName];
+
+import java.util.List;
+
+import cn.cauc.bean.[beanName];
+import cn.cauc.bean.TzParams;
+
+/**
+ * [description]Mapper
+ * I[beanName]Mapper
+ * 创建人:[author] 
+ * 时间：[date]
+ * @version 1.0.0
+ */
+public interface I[beanName]Mapper {
+
+	/**
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：find[beanName]s
+	 * 创建人：[author]                          
+	 * 时间：[date]
+	 * @param params
+	 * @return 
+	 * 返回类型：List<[beanName]>
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public List<[beanName]> find[beanName]s(TzParams params);
+	
+	/**
+	 * 求总数
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：count
+	 * 创建人：[author] 
+	 * 时间：[date]
+	 * @param id
+	 * @return 
+	 * 返回类型：List<[beanName]>
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public int count(TzParams params);
+	
+	/**
+	 * 
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：get[beanName]
+	 * 创建人：[author] 
+	 * 时间：[date]
+	 * @param id
+	 * @return 
+	 * 返回类型：List<[beanName]>
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public [beanName] get(Integer id);
+	
+	/**
+	 * 保存[description]
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：save
+	 * 时间：[date]
+	 * @param [smallBeanName]
+	 * @return 
+	 * 返回类型：[beanName]
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public int save([beanName] [smallBeanName]);
+	
+	/**
+	 * 更新[description]
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：update
+	 * 创建人：[author] 
+	 * 时间：[date]
+	 * @param [smallBeanName]
+	 * @return 
+	 * 返回类型：int
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public int update([beanName] [smallBeanName]);
+	
+	/**
+	 * 删除[description]
+	 * [daoPackage].[smallBeanName] 
+	 * 方法名：delete
+	 * 创建人：[author] 
+	 * 时间：[date] 
+	 * @param params
+	 * @return 
+	 * 返回类型：int
+	 * @exception 
+	 * @since  1.0.0
+	 */
+	public int delete(TzParams params);
+	
+}

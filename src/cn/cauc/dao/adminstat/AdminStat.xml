@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cauc.dao.adminstat.IAdminStatMapper" >
+	<select id="findAdminStats" resultType="AdminStat" parameterType="TzParams">
+		select 
+			id,
+			classname,
+			method,
+			time,
+			create_time as createTime,
+			ip,
+			ipaddress as ipAddress,
+			user_id as userId,
+			username,
+			model,
+			description
+		FROM
+			cauc_admin_stat 
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(keyword)">
+				and method LIKE '%${keyword}%'
+			</if>
+		</trim>
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	<select id="count" resultType="int" parameterType="TzParams">
+		SELECT
+			count(1) 
+		FROM
+			cauc_admin_stat 
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(keyword)">
+				and method LIKE '%${keyword}%'
+			</if>
+		</trim>
+	</select>
+	
+	<insert id="save" parameterType="AdminStat">
+			INSERT INTO cauc_admin_stat(
+				classname,
+				method,
+				time,
+				ip,
+				ipaddress,
+				user_id,
+				username,
+				model,
+				description
+			)VALUES(
+				#{classname},
+				#{method},
+				#{time},
+				#{ip},
+				#{ipAddress},
+				#{userId},
+				#{username},
+				#{model},
+				#{description}
+			)
+	</insert>
+	
+	<!-- 查询内容统计统计分组 -->
+<!-- 	<select id="groupContents" resultType="java.util.Map" parameterType="TzParams"> -->
+<!-- 		SELECT  -->
+<!-- 		id as id, -->
+<!-- 		title as title, -->
+<!-- 		create_time as time -->
+<!-- 		FROM cauc_content -->
+<!-- 		WHERE DATE_FORMAT(create_time,'%m') = #{month} -->
+<!-- 		ORDER BY ${order} -->
+<!-- 	</select> -->
+	
+	
+	<select id="groupUsers" resultType="java.util.HashMap"  parameterType="TzParams">
+		SELECT
+			COUNT(1) as num, 
+			DATE_FORMAT(create_time,'%H') as h
+		FROM cauc_user
+		WHERE DATE_FORMAT(create_time,'%Y-%m-%d')= #{date}
+		GROUP BY h
+		ORDER BY h 
+	</select>
+	
+</mapper>

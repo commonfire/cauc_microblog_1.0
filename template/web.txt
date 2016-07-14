@@ -1,0 +1,99 @@
+/**
+ * 民航安保信息管理分析预警平台
+ * cauc_microblog
+ * [webPackage].[smallBeanName]
+ * [beanName]Controller.java
+ * 创建人:[author]
+ * 时间：[date]
+ * 中国民航大学-版权所有
+ */
+package [webPackage].[smallBeanName];
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import cn.cauc.bean.[beanName];
+import cn.cauc.bean.TzParams;
+import cn.cauc.service.[smallBeanName].I[beanName]Service;
+import cn.cauc.util.TmStringUtils;
+
+/**
+ * [description]web
+ * [beanName]Controller
+ * 创建人:[author]
+ * 时间：[date]
+ * @version 1.0.0
+ */
+@Controller
+@RequestMapping("/admin/[smallBeanName]")
+public class [beanName]Controller {
+	
+	@Autowired
+	private I[beanName]Service [smallBeanName]Service;
+	
+	/*列表查询*/
+	@RequestMapping("/list")
+	public String list(TzParams params){
+		return "[smallBeanName]/list";
+	}
+	
+	/*模板页面*/
+	@RequestMapping("/template")
+	public ModelAndView template(TzParams params){
+		ModelAndView modelAndView = new ModelAndView();
+		List<[beanName]> [smallBeanName]s = [smallBeanName]Service.find[beanName]s(params);
+		int count = [smallBeanName]Service.count(params);
+		modelAndView.setViewName("[smallBeanName]/template");
+		modelAndView.addObject("datas",[smallBeanName]s);
+		modelAndView.addObject("itemCount",count);
+		return modelAndView;
+	}
+	
+	@RequestMapping(method=RequestMethod.POST,value="/update")
+	@ResponseBody
+	public String update([beanName] [smallBeanName]){
+		try {
+			[smallBeanName]Service.update([smallBeanName]);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(method=RequestMethod.POST,value="/delete")
+	@ResponseBody
+	public String delete(TzParams params){
+		try {
+			[smallBeanName]Service.delete(params);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(method=RequestMethod.POST,value="/save")
+	@ResponseBody
+	public String save([beanName] [smallBeanName]){
+		try {	
+			[smallBeanName].setPassword(TmStringUtils.md5Base64([smallBeanName].getPassword()));
+			[smallBeanName].setUpdateTime(new Date());
+			[smallBeanName].setIsDelete(0);
+			[smallBeanName].setForbiden(0);
+			[smallBeanName]Service.save([smallBeanName]);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+
+}

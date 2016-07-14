@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cauc.dao.microblogcontent.IMicroblogContentMapper" >
+	<select id="findMicroblogContents" resultType="MicroblogContent" parameterType="TzParams">
+		SELECT 
+			w.id,
+			w.user_id as userId,
+			w.content,
+			w.publish_time as publishTime,
+			w.repost_user as repostUser,
+			w.repost_user_id as repostUserId,
+			w.publish_timestamp publishTimestamp,
+			i.user_alias as userAlias
+		FROM t_user_weibocontent w 
+		LEFT JOIN t_user_info i 
+		ON w.user_id = i.user_id		
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate)">				
+				and w.publish_time &gt;= '${startDate}'			
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and w.publish_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and w.user_id LIKE '%${userId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(repostUser)">
+				and w.repost_user LIKE '%${repostUser}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(content)">
+				and w.content LIKE '%${content}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(keyword)">
+				and w.content LIKE '%${keyword}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and i.user_alias LIKE '%${userAlias}%'
+			</if> 
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(w.publish_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(w.publish_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(w.publish_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(w.publish_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(w.publish_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(w.publish_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(w.publish_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(w.publish_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(w.publish_time)=QUARTER(now())
+			</if>
+		</trim>
+		ORDER BY ${order}
+		LIMIT #{pageNo} ,#{pageSize};				
+	</select>
+	
+	<select id="count" resultType="int" parameterType="TzParams">
+		SELECT
+			count(1) 
+		FROM t_user_weibocontent w 
+		LEFT JOIN t_user_info i 
+		ON w.user_id = i.user_id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">  
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(startDate)">				
+				and w.publish_time &gt;= '${startDate}'			
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(endDate)">				
+				and w.publish_time &lt;= '${endDate}'				
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userId)">
+				and w.user_id LIKE '%${userId}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(repostUser)">
+				and w.repost_user LIKE '%${repostUser}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(content)">
+				and w.content LIKE '%${content}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(keyword)">
+				and w.content LIKE '%${keyword}%'
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(userAlias)">
+				and i.user_alias LIKE '%${userAlias}%'
+			</if> 
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==1"><!-- 今天 -->
+				AND TO_DAYS(w.publish_time) = to_days(now())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==2"><!-- 昨天-->
+				AND <![CDATA[AND TO_DAYS(NOW())-TO_DAYS(w.publish_time)=1]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==3"><!-- 近五天-->
+				AND <![CDATA[AND DATE_SUB(NOW(), INTERVAL 5 DAY) <= date(w.publish_time)]]>
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==4"><!-- 本周 -->
+				AND  WEEKOFYEAR(w.publish_time)=WEEKOFYEAR(NOW())
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==5"><!-- 上周 -->
+				AND YEARWEEK(date_format(w.publish_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==6"><!-- 本月 -->
+				AND date_format(w.publish_time,'%Y-%m')=date_format(now(),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==7"><!-- 上月 -->
+				AND date_format(w.publish_time,'%Y-%m')=date_format(DATE_SUB(NOW(), INTERVAL 1 MONTH),'%Y-%m')
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==8"><!-- 上季度 -->
+				AND  QUARTER(w.publish_time)=QUARTER(DATE_SUB(now(),interval 1 QUARTER))
+			</if>
+			<if test="@cn.cauc.util.TmStringUtils@isNotEmpty(mark) and mark==9"><!-- 本季度 -->
+				AND  QUARTER(w.publish_time)=QUARTER(now())
+			</if>
+		</trim>
+	</select>
+</mapper>

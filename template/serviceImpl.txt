@@ -1,0 +1,67 @@
+/**
+ * 民航安保信息管理分析预警平台
+ * cauc_microblog
+ * [servicePackage].[smallBeanName]
+ * [beanName]ServiceImpl.java
+ * 创建人:[author]
+ * 时间：[date]
+ * 中国民航大学-版权所有
+ */
+package [servicePackage].[smallBeanName].impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.cauc.bean.[beanName];
+import cn.cauc.bean.TzParams;
+import cn.cauc.dao.[smallBeanName].I[beanName]Mapper;
+import [servicePackage].[smallBeanName].I[beanName]Service;
+import cn.cauc.util.TmStringUtils;
+
+/**
+ * [description]serviceImpl
+ * I[beanName]Service
+ * 创建人:[author] 
+ * 时间：[date]
+ * @version 1.0.0
+ * 
+ */
+@Service
+public class [beanName]ServiceImpl implements I[beanName]Service{
+
+	@Autowired
+	private I[beanName]Mapper [smallBeanName]Mapper;
+	
+	@Override
+	public List<[beanName]> find[beanName]s(TzParams params){
+		if(TmStringUtils.isEmpty(params.getOrder()))params.setOrder("create_time desc");
+		return [smallBeanName]Mapper.find[beanName]s(params);
+	}
+	
+	@Override
+	public int count(TzParams params){
+		return [smallBeanName]Mapper.count(params);
+	}
+
+	@Override
+	public [beanName] get(Integer id) {
+		return [smallBeanName]Mapper.get(id);
+	}
+
+	@Override
+	public int save([beanName] [smallBeanName]) {
+		return [smallBeanName]Mapper.save([smallBeanName]);
+	}
+
+	@Override
+	public int update([beanName] [smallBeanName]) {
+		return [smallBeanName]Mapper.update([smallBeanName]);
+	}
+
+	@Override
+	public int delete(TzParams params) {
+		return [smallBeanName]Mapper.delete(params);
+	}
+}
